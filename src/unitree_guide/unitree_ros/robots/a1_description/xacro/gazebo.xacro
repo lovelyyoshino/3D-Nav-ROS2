@@ -1,0 +1,424 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- ros2_control plugin (migrated from ROS1 gazebo_ros_control) -->
+    <gazebo>
+        <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+            <ros>
+                <namespace>/a1_gazebo</namespace>
+            </ros>
+            <robot_param>robot_description</robot_param>
+            <robot_param_node>robot_state_publisher</robot_param_node>
+            <parameters>$(find a1_description)/config/robot_control.yaml</parameters>
+        </plugin>
+    </gazebo>
+
+    <!-- Show the trajectory of trunk center. -->
+    <!-- <gazebo>
+        <plugin name="3dplot" filename="libLinkPlot3DPlugin.so">
+            <frequency>10</frequency>
+            <plot>
+                <link>base</link>
+                <pose>0 0 0 0 0 0</pose>
+                <material>Gazebo/Yellow</material>
+            </plot>
+        </plugin>
+    </gazebo> -->
+
+    <!-- Show the trajectory of foot. You can add another trajectory about another foot. -->
+    <!-- <gazebo>
+        <plugin name="3dplot" filename="libLinkPlot3DPlugin.so">
+            <frequency>100</frequency>
+            <plot>
+                <link>FL_foot</link>
+                <pose>0 0 0 0 0 0</pose>
+                <material>Gazebo/Green</material>
+            </plot>
+        </plugin>
+    </gazebo> -->
+
+    <gazebo>
+        <plugin filename="libgazebo_ros_force.so" name="gazebo_ros_force">
+            <ros>
+                <namespace>/a1_gazebo</namespace>
+                <remapping>wrench:=/apply_force/trunk</remapping>
+            </ros>
+            <link_name>trunk</link_name>
+        </plugin>
+    </gazebo>
+
+    <gazebo reference="imu_link">
+        <gravity>true</gravity>
+        <sensor name="imu_sensor" type="imu">
+            <always_on>true</always_on>
+            <update_rate>1000</update_rate>
+            <visualize>true</visualize>
+            <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+                <ros>
+                    <namespace>/a1_gazebo</namespace>
+                    <remapping>~/out:=trunk_imu</remapping>
+                </ros>
+                <initial_orientation_as_reference>false</initial_orientation_as_reference>
+                <frame_name>imu_link</frame_name>
+            </plugin>
+            <pose>0 0 0 0 0 0</pose>
+        </sensor>
+    </gazebo>
+
+    <!-- base_self position and orientation (ROS2 format). -->
+    <gazebo>
+        <plugin name="p3d_base_trunk_pos_vel" filename="libgazebo_ros_p3d.so">
+            <ros>
+                <namespace>/a1_gazebo</namespace>
+                <remapping>odom:=ground_truth/base_trunk</remapping>
+            </ros>
+            <update_rate>100</update_rate>
+            <body_name>base</body_name>
+            <frame_name>trunk</frame_name>
+            <xyz_offset>0 0 0</xyz_offset>
+            <rpy_offset>0 0 0</rpy_offset>
+        </plugin>
+    </gazebo>
+
+    <!-- base_w position and orientation (ROS2 format). -->
+    <gazebo>
+        <plugin name="p3d_base_w_pos_vel" filename="libgazebo_ros_p3d.so">
+            <ros>
+                <namespace>/a1_gazebo</namespace>
+                <remapping>odom:=ground_truth/base_w</remapping>
+            </ros>
+            <update_rate>100</update_rate>
+            <body_name>base</body_name>
+            <frame_name>world</frame_name>
+            <xyz_offset>0 0 0</xyz_offset>
+            <rpy_offset>0 0 0</rpy_offset>
+        </plugin>
+    </gazebo>
+
+    <!-- Foot position and vel (ROS2 format). -->
+    <gazebo>
+        <plugin name="p3d_FL_foot_pos_vel" filename="libgazebo_ros_p3d.so">
+            <ros>
+                <namespace>/a1_gazebo</namespace>
+                <remapping>odom:=ground_truth/FL_foot</remapping>
+            </ros>
+            <update_rate>100</update_rate>
+            <body_name>FL_foot</body_name>
+            <frame_name>base</frame_name>
+            <xyz_offset>0 0 0</xyz_offset>
+            <rpy_offset>0 0 0</rpy_offset>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="p3d_FR_foot_pos_vel" filename="libgazebo_ros_p3d.so">
+            <ros>
+                <namespace>/a1_gazebo</namespace>
+                <remapping>odom:=ground_truth/FR_foot</remapping>
+            </ros>
+            <update_rate>100</update_rate>
+            <body_name>FR_foot</body_name>
+            <frame_name>base</frame_name>
+            <xyz_offset>0 0 0</xyz_offset>
+            <rpy_offset>0 0 0</rpy_offset>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="p3d_RL_foot_pos_vel" filename="libgazebo_ros_p3d.so">
+            <ros>
+                <namespace>/a1_gazebo</namespace>
+                <remapping>odom:=ground_truth/RL_foot</remapping>
+            </ros>
+            <update_rate>100</update_rate>
+            <body_name>RL_foot</body_name>
+            <frame_name>base</frame_name>
+            <xyz_offset>0 0 0</xyz_offset>
+            <rpy_offset>0 0 0</rpy_offset>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="p3d_RR_foot_pos_vel" filename="libgazebo_ros_p3d.so">
+            <ros>
+                <namespace>/a1_gazebo</namespace>
+                <remapping>odom:=ground_truth/RR_foot</remapping>
+            </ros>
+            <update_rate>100</update_rate>
+            <body_name>RR_foot</body_name>
+            <frame_name>base</frame_name>
+            <xyz_offset>0 0 0</xyz_offset>
+            <rpy_offset>0 0 0</rpy_offset>
+        </plugin>
+    </gazebo>
+
+    <!-- Foot contacts. -->
+    <gazebo reference="FR_calf">
+        <sensor name="FR_foot_contact" type="contact">
+        <update_rate>100</update_rate>
+        <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+        <contact>
+            <collision>FR_calf_fixed_joint_lump__FR_foot_collision_1</collision>
+        </contact>
+        </sensor>
+    </gazebo>
+    <gazebo reference="FL_calf">
+        <sensor name="FL_foot_contact" type="contact">
+        <update_rate>100</update_rate>
+        <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+        <contact>
+            <collision>FL_calf_fixed_joint_lump__FL_foot_collision_1</collision>
+        </contact>
+        </sensor>
+    </gazebo>
+    <gazebo reference="RR_calf">
+        <sensor name="RR_foot_contact" type="contact">
+        <update_rate>100</update_rate>
+        <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+        <contact>
+            <collision>RR_calf_fixed_joint_lump__RR_foot_collision_1</collision>
+        </contact>
+        </sensor>
+    </gazebo>
+    <gazebo reference="RL_calf">
+        <sensor name="RL_foot_contact" type="contact">
+        <update_rate>100</update_rate>
+        <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+        <contact>
+            <collision>RL_calf_fixed_joint_lump__RL_foot_collision_1</collision>
+        </contact>
+        </sensor>
+    </gazebo>
+
+    <!-- Visualization of Foot contacts. -->
+    <gazebo reference="FR_foot">
+        <visual>
+            <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+                <topicName>FR_foot_contact</topicName>
+            </plugin>
+        </visual>
+    </gazebo>
+    <gazebo reference="FL_foot">
+        <visual>
+            <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+                <topicName>FL_foot_contact</topicName>
+            </plugin>
+        </visual>
+    </gazebo>
+    <gazebo reference="RR_foot">
+        <visual>
+            <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+                <topicName>RR_foot_contact</topicName>
+            </plugin>
+        </visual>
+    </gazebo>
+    <gazebo reference="RL_foot">
+        <visual>
+            <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+                <topicName>RL_foot_contact</topicName>
+            </plugin>
+        </visual>
+    </gazebo>
+
+    <gazebo reference="base">
+        <material>Gazebo/Green</material>
+        <turnGravityOff>false</turnGravityOff>
+    </gazebo>
+
+    <gazebo reference="trunk">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <kp  value="1000000.0"/>
+        <kd  value="1.0"/>
+    </gazebo>
+
+    <gazebo reference="stick_link">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/White</material>
+    </gazebo>
+
+    <gazebo reference="imu_link">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <!-- FL leg -->
+    <gazebo reference="FL_hip">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/DarkGrey</material>
+    </gazebo>
+    <gazebo reference="FL_thigh">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        <kp  value="1000000.0"/>
+        <kd  value="1.0"/>
+    </gazebo>
+    <gazebo reference="FL_calf">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="FL_foot">
+        <mu1>0.6</mu1>
+        <mu2>0.6</mu2>
+        <self_collide>1</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        <kp  value="1000000.0"/>
+        <kd  value="1.0"/>
+    </gazebo>
+
+    <!-- FR leg -->
+    <gazebo reference="FR_hip">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/DarkGrey</material>
+    </gazebo>
+    <gazebo reference="FR_thigh">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        <kp  value="1000000.0"/>
+        <kd  value="1.0"/>
+    </gazebo>
+    <gazebo reference="FR_calf">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="FR_foot">
+        <mu1>0.6</mu1>
+        <mu2>0.6</mu2>
+        <self_collide>1</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        <kp  value="1000000.0"/>
+        <kd  value="1.0"/>
+    </gazebo>
+
+    <!-- RL leg -->
+    <gazebo reference="RL_hip">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/DarkGrey</material>
+    </gazebo>
+    <gazebo reference="RL_thigh">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        <kp  value="1000000.0"/>
+        <kd  value="1.0"/>
+    </gazebo>
+    <gazebo reference="RL_calf">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="RL_foot">
+        <mu1>0.6</mu1>
+        <mu2>0.6</mu2>
+        <self_collide>1</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        <kp  value="1000000.0"/>
+        <kd  value="1.0"/>
+    </gazebo>
+
+    <!-- RR leg -->
+    <gazebo reference="RR_hip">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/DarkGrey</material>
+    </gazebo>
+    <gazebo reference="RR_thigh">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        <kp  value="1000000.0"/>
+        <kd  value="1.0"/>
+    </gazebo>
+    <gazebo reference="RR_calf">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <self_collide>1</self_collide>
+    </gazebo>
+    <gazebo reference="RR_foot">
+        <mu1>0.6</mu1>
+        <mu2>0.6</mu2>
+        <self_collide>1</self_collide>
+        <material>Gazebo/DarkGrey</material>
+        <kp  value="1000000.0"/>
+        <kd  value="1.0"/>
+    </gazebo>
+
+
+
+     <!-- gazebo livox mid360 plugins -->
+    <xacro:property name="M_PI" value="3.14159"/> 
+    <gazebo reference="laser_livox">
+        <sensor type="ray" name="laser_livox">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+            <plugin name="gazebo_ros_laser_controller" filename="liblivox_laser_simulation.so">
+                            <ray>
+                            <scan>
+                                    <horizontal>
+                                    <samples>100</samples>
+                                    <resolution>1</resolution>
+                                    <min_angle>${0}</min_angle>
+                                    <max_angle>${2*M_PI}</max_angle>
+                                    </horizontal>
+                                    <vertical>
+                                    <samples>360</samples>
+                                    <resolution>1</resolution>
+                                    <min_angle>${-5.22/180*M_PI}</min_angle>
+                                    <max_angle>${57.22/180*M_PI}</max_angle>
+                                    </vertical>
+                            </scan>
+                            <range>
+                                    <min>0.1</min>
+                                    <max>40</max>
+                                    <resolution>0.01</resolution>
+                            </range>
+                            <noise>
+                                    <type>gaussian</type>
+                                    <mean>0.0</mean>
+                                    <stddev>0.005</stddev>
+                            </noise>
+                            </ray>
+            <visualize>true</visualize>
+                    <samples>24000</samples>
+                    <downsample>1</downsample>
+                    <csv_file_name>package://a1_description/scan_mode/mid360.csv</csv_file_name>
+                    <ros_topic>/scan</ros_topic>
+                    <frameName>laser_livox</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+
+    <!-- gazebo livox imu-link plugins (ROS2 format) -->
+    <gazebo reference="livox_imu_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on>
+        <update_rate>1000</update_rate>
+        <visualize>true</visualize>
+        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+            <ros>
+                <namespace>/a1_gazebo</namespace>
+                <remapping>~/out:=/livox/imu</remapping>
+            </ros>
+            <initial_orientation_as_reference>false</initial_orientation_as_reference>
+            <frame_name>livox_imu_link</frame_name>
+        </plugin>
+        <pose>0 0 0 0 0 0</pose>
+    </sensor>
+    </gazebo>
+
+</robot>

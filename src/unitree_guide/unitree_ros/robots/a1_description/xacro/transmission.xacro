@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:macro name="leg_transmission" params="name">
+        <!-- ROS2 ros2_control 接口定义（替代 ROS1 transmission 标签） -->
+    </xacro:macro>
+
+    <ros2_control name="GazeboSystem" type="system">
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+        </hardware>
+
+        <!-- FL leg -->
+        <joint name="FL_hip_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="FL_thigh_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="FL_calf_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+
+        <!-- FR leg -->
+        <joint name="FR_hip_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="FR_thigh_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="FR_calf_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+
+        <!-- RL leg -->
+        <joint name="RL_hip_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="RL_thigh_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="RL_calf_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+
+        <!-- RR leg -->
+        <joint name="RR_hip_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="RR_thigh_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+        <joint name="RR_calf_joint">
+            <command_interface name="effort">
+                <param name="min">-33.5</param>
+                <param name="max">33.5</param>
+            </command_interface>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+    </ros2_control>
+
+</robot>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="3">
+    <name>unitree_legged_control</name>
+    <version>0.0.0</version>
+    <description>The unitree_legged_control package</description>
+    <maintainer email="laikago@unitree.cc">unitree</maintainer>
+    <license>TODO</license>
+    <buildtool_depend>ament_cmake</buildtool_depend>
+    <depend>controller_interface</depend>
+    <depend>hardware_interface</depend>
+    <depend>pluginlib</depend>
+    <depend>rclcpp</depend>
+    <depend>realtime_tools</depend>
+    <depend>unitree_legged_msgs</depend>
+    <depend>geometry_msgs</depend>
+    <depend>urdf</depend>
+    <depend>control_toolbox</depend>
+    <export>
+        <build_type>ament_cmake</build_type>
+    </export>
+</package>

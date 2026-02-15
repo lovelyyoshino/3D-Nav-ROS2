@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+    <name>unitree_guide</name>
+    <version>0.0.0</version>
+    <description>The unitree_guide is an open source project for controlling the quadruped robot of Unitree Robotics, and it is also the software project accompanying 《四足机器人控制算法--建模、控制与实践》 published by Unitree Robotics.</description>
+
+    <maintainer email="laikago@unitree.cc">unitree</maintainer>
+    <license>TODO</license>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+    <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+    <depend>rclcpp</depend>
+    <depend>rclpy</depend>
+    <depend>std_msgs</depend>
+    <depend>geometry_msgs</depend>
+    <depend>nav_msgs</depend>
+    <depend>sensor_msgs</depend>
+    <depend>tf2</depend>
+    <depend>tf2_ros</depend>
+    <depend>unitree_legged_msgs</depend>
+    <depend>gazebo_msgs</depend>
+    <depend>gazebo_ros</depend>
+    <depend>controller_manager</depend>
+    <depend>joint_state_broadcaster</depend>
+    <depend>robot_state_publisher</depend>
+    <depend>rosgraph_msgs</depend>
+
+    <exec_depend>rosidl_default_runtime</exec_depend>
+    <member_of_group>rosidl_interface_packages</member_of_group>
+
+    <!-- The export tag contains other, unspecified, tags -->
+    <export>
+        <build_type>ament_cmake</build_type>
+        <gazebo_ros plugin_path="${prefix}/lib" gazebo_media_path="${prefix}"/>
+    </export>
+</package>
