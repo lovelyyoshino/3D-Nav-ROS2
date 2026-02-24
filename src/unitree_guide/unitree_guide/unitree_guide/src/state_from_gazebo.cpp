@@ -123,21 +123,22 @@ void callback_BASE(const gazebo_msgs::msg::LinkStates::SharedPtr msg) {
 
 int main(int argc, char **argv) {
     rclcpp::init(argc, argv);
+    auto args = rclcpp::remove_ros_arguments(argc, argv);
     g_node = rclcpp::Node::make_shared("state_from_gazebo");
 
-    if (argc != 7)   // x y z qx qy qz qw
+    if (args.size() != 7)   // x y z yaw pitch roll
     {
-        RCLCPP_ERROR(g_node->get_logger(), "Usage: static_transform_publisher x y z yaw pitch roll");
+        RCLCPP_ERROR(g_node->get_logger(), "Usage: state_from_gazebo x y z yaw pitch roll (got %zu args)", args.size());
         return -1;
     }
 
-    x = atof(argv[1]);
-    y = atof(argv[2]);
-    z = atof(argv[3]);
+    x = atof(args[1].c_str());
+    y = atof(args[2].c_str());
+    z = atof(args[3].c_str());
 
-    double yaw   = atof(argv[4]);
-    double pitch = atof(argv[5]);
-    double roll  = atof(argv[6]);
+    double yaw   = atof(args[4].c_str());
+    double pitch = atof(args[5].c_str());
+    double roll  = atof(args[6].c_str());
 
     g_node->declare_parameter<std::string>("robot_name", "a1");
     g_node->get_parameter("robot_name", robot_name);

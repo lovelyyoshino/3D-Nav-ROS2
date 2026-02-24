@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
     @brief:The analog handle is used to control the unitree robot
     @Editor:CJH

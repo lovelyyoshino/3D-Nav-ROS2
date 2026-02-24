@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
 project(unitree_guide)
-# 添加torch依赖 — 通过环境变量 TORCH_DIR 指定路径
-if(DEFINED ENV{TORCH_DIR})
-    find_package(Torch REQUIRED PATHS $ENV{TORCH_DIR})
-else()
-    find_package(Torch REQUIRED)
-endif()
+
+
+# 添加torch依赖
+set(CMAKE_PREFIX_PATH "/home/lenovo/libtorch-cxx11-abi-shared-with-deps-2.3.0+cu118/libtorch" ${CMAKE_PREFIX_PATH})
 
 set(ROBOT_TYPE A1)         # The type of robot, support Go1 and A1 currently
 set(PLATFORM amd64)         # The platform to compile, support amd64 and arm64
@@ -50,6 +48,29 @@ if(AMENT_MAKE)
         add_definitions(-DCOMPILE_WITH_MOVE_BASE)
     endif()
 endif()
+# 将 libtorch 库路径嵌入可执行文件，运行时无需手动设置 LD_LIBRARY_PATH
+set(CMAKE_INSTALL_RPATH "/home/lenovo/libtorch-cxx11-abi-shared-with-deps-2.3.0+cu118/libtorch/lib")
+set(CMAKE_INSTALL_RPATH_USE_LINK_LIBRARIES TRUE)
+
+find_package(Torch REQUIRED)
+# Force CXX11 ABI=1 to match ROS2 Humble (Torch ships with ABI=0)
+string(REPLACE "-D_GLIBCXX_USE_CXX11_ABI=0" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+set(TORCH_CXX_FLAGS "")
+foreach(_torch_lib torch torch_cpu torch_cuda c10 c10_cuda)
+    if(TARGET ${_torch_lib})
+        get_target_property(_icd ${_torch_lib} INTERFACE_COMPILE_DEFINITIONS)
+        if(_icd)
+            list(FILTER _icd EXCLUDE REGEX "GLIBCXX_USE_CXX11_ABI")
+            set_target_properties(${_torch_lib} PROPERTIES INTERFACE_COMPILE_DEFINITIONS "${_icd}")
+        endif()
+        get_target_property(_ico ${_torch_lib} INTERFACE_COMPILE_OPTIONS)
+        if(_ico)
+            list(FILTER _ico EXCLUDE REGEX "GLIBCXX_USE_CXX11_ABI")
+            set_target_properties(${_torch_lib} PROPERTIES INTERFACE_COMPILE_OPTIONS "${_ico}")
+        endif()
+    endif()
+endforeach()
+add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
 
 if(DEBUG)
     add_definitions(-DCOMPILE_DEBUG)
@@ -129,6 +150,10 @@ file(GLOB_RECURSE SRC_LIST
     "src/*/*.cc"
 )
 
+if(NOT REAL_ROBOT)
+    list(FILTER SRC_LIST EXCLUDE REGEX "IOFREEDOGSDK")
+endif()
+
 # CUDA — 自动检测，如果环境变量 CUDA_TOOLKIT_ROOT_DIR 存在则使用
 if(DEFINED ENV{CUDA_HOME})
     set(CMAKE_CUDA_COMPILER $ENV{CUDA_HOME}/bin/nvcc)
@@ -150,7 +175,6 @@ ament_target_dependencies(state_from_gazebo
 )
 
 add_executable(junior_ctrl src/main.cpp ${SRC_LIST})
-target_link_libraries(junior_ctrl ${TORCH_LIBRARIES})
 if(AMENT_MAKE)
     ament_target_dependencies(junior_ctrl
         rclcpp
@@ -170,6 +194,7 @@ if(AMENT_MAKE)
         )
     endif()
 endif()
+target_link_libraries(junior_ctrl ${TORCH_LIBRARIES})
 if(DEBUG)
     target_include_directories(junior_ctrl PRIVATE ${Python2_INCLUDE_DIRS} ${Python2_NumPy_INCLUDE_DIRS})
     target_link_libraries(junior_ctrl Python2::Python Python2::NumPy)

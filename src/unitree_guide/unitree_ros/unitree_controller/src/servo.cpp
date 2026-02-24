@@ -235,10 +235,6 @@ int main(int argc, char **argv)
 
     multiThread listen_publish_obj(node, robot_name);
 
-    rclcpp::executors::SingleThreadedExecutor executor;
-    executor.add_node(node);
-    std::thread spin_thread([&executor]() { executor.spin(); });
-    spin_thread.detach();
     usleep(300000); // must wait 300ms, to get first state
 
     rclcpp::Publisher<unitree_legged_msgs::msg::LowState>::SharedPtr lowState_pub;

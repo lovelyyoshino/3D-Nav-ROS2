@@ -17,7 +17,7 @@ void RosShutDown(int sig){
 IOROS::IOROS():IOInterface(){
     std::cout << "The control interface for ROS Gazebo simulation" << std::endl;
     _node = rclcpp::Node::make_shared("ioros_node");
-    _node->declare_parameter<std::string>("robot_name", "");
+    _node->declare_parameter<std::string>("robot_name", "a1");
     _node->get_parameter("robot_name", _robot_name);
     std::cout << "robot_name: " << _robot_name << std::endl;
 
@@ -124,7 +124,7 @@ void IOROS::joyCallback(const sensor_msgs::msg::Joy::SharedPtr msg) {
 }
 
 void IOROS::timeCallback(const rosgraph_msgs::msg::Clock& msg) {
-    current_time = (msg.clock.sec)*1e6 + (msg.clock.nsec)/1000;
+    current_time = (msg.clock.sec)*1e6 + (msg.clock.nanosec)/1000;
     // std::cout << "current_time: " << current_time << std::endl;
 }
 
@@ -222,7 +222,7 @@ void IOROS::FRhipCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[0].mode = msg.mode;
     _lowState.motor_state[0].q = msg.q;
     _lowState.motor_state[0].dq = msg.dq;
-    _lowState.motor_state[0].tauEst = msg.tau_est;
+    _lowState.motor_state[0].tau_est = msg.tau_est;
 }
 
 void IOROS::FRthighCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -230,7 +230,7 @@ void IOROS::FRthighCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[1].mode = msg.mode;
     _lowState.motor_state[1].q = msg.q;
     _lowState.motor_state[1].dq = msg.dq;
-    _lowState.motor_state[1].tauEst = msg.tau_est;
+    _lowState.motor_state[1].tau_est = msg.tau_est;
 }
 
 void IOROS::FRcalfCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -238,7 +238,7 @@ void IOROS::FRcalfCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[2].mode = msg.mode;
     _lowState.motor_state[2].q = msg.q;
     _lowState.motor_state[2].dq = msg.dq;
-    _lowState.motor_state[2].tauEst = msg.tau_est;
+    _lowState.motor_state[2].tau_est = msg.tau_est;
 }
 
 void IOROS::FLhipCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -246,7 +246,7 @@ void IOROS::FLhipCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[3].mode = msg.mode;
     _lowState.motor_state[3].q = msg.q;
     _lowState.motor_state[3].dq = msg.dq;
-    _lowState.motor_state[3].tauEst = msg.tau_est;
+    _lowState.motor_state[3].tau_est = msg.tau_est;
 }
 
 void IOROS::FLthighCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -254,7 +254,7 @@ void IOROS::FLthighCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[4].mode = msg.mode;
     _lowState.motor_state[4].q = msg.q;
     _lowState.motor_state[4].dq = msg.dq;
-    _lowState.motor_state[4].tauEst = msg.tau_est;
+    _lowState.motor_state[4].tau_est = msg.tau_est;
 }
 
 void IOROS::FLcalfCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -262,7 +262,7 @@ void IOROS::FLcalfCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[5].mode = msg.mode;
     _lowState.motor_state[5].q = msg.q;
     _lowState.motor_state[5].dq = msg.dq;
-    _lowState.motor_state[5].tauEst = msg.tau_est;
+    _lowState.motor_state[5].tau_est = msg.tau_est;
 }
 
 void IOROS::RRhipCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -270,7 +270,7 @@ void IOROS::RRhipCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[6].mode = msg.mode;
     _lowState.motor_state[6].q = msg.q;
     _lowState.motor_state[6].dq = msg.dq;
-    _lowState.motor_state[6].tauEst = msg.tau_est;
+    _lowState.motor_state[6].tau_est = msg.tau_est;
 }
 
 void IOROS::RRthighCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -278,7 +278,7 @@ void IOROS::RRthighCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[7].mode = msg.mode;
     _lowState.motor_state[7].q = msg.q;
     _lowState.motor_state[7].dq = msg.dq;
-    _lowState.motor_state[7].tauEst = msg.tau_est;
+    _lowState.motor_state[7].tau_est = msg.tau_est;
 }
 
 void IOROS::RRcalfCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -286,7 +286,7 @@ void IOROS::RRcalfCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[8].mode = msg.mode;
     _lowState.motor_state[8].q = msg.q;
     _lowState.motor_state[8].dq = msg.dq;
-    _lowState.motor_state[8].tauEst = msg.tau_est;
+    _lowState.motor_state[8].tau_est = msg.tau_est;
 }
 
 void IOROS::RLhipCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -294,7 +294,7 @@ void IOROS::RLhipCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[9].mode = msg.mode;
     _lowState.motor_state[9].q = msg.q;
     _lowState.motor_state[9].dq = msg.dq;
-    _lowState.motor_state[9].tauEst = msg.tau_est;
+    _lowState.motor_state[9].tau_est = msg.tau_est;
 }
 
 void IOROS::RLthighCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -302,7 +302,7 @@ void IOROS::RLthighCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[10].mode = msg.mode;
     _lowState.motor_state[10].q = msg.q;
     _lowState.motor_state[10].dq = msg.dq;
-    _lowState.motor_state[10].tauEst = msg.tau_est;
+    _lowState.motor_state[10].tau_est = msg.tau_est;
 }
 
 void IOROS::RLcalfCallback(const unitree_legged_msgs::msg::MotorState& msg)
@@ -310,7 +310,7 @@ void IOROS::RLcalfCallback(const unitree_legged_msgs::msg::MotorState& msg)
     _lowState.motor_state[11].mode = msg.mode;
     _lowState.motor_state[11].q = msg.q;
     _lowState.motor_state[11].dq = msg.dq;
-    _lowState.motor_state[11].tauEst = msg.tau_est;
+    _lowState.motor_state[11].tau_est = msg.tau_est;
 }
 
 

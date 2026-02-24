@@ -3,6 +3,7 @@ project(unitree_legged_real)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_FLAGS "-O3 -fPIC")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -17,7 +18,8 @@ else()
   set(ARCH arm64)
 endif()
 
-set(EXTRA_LIBS -pthread ${unitree_legged_sdk_LIBRARIES})
+link_directories(${unitree_legged_sdk_DIR}/../../../lib/unitree)
+set(EXTRA_LIBS -pthread libunitree_legged_sdk.a)
 
 include_directories(
     include

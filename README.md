@@ -6,7 +6,7 @@
 ## 下载与依赖
 
 ### 依赖项安装
-1. **libtorch**：下载 C++ 版本的 [libtorch](https://pytorch.org/)。
+1. **libtorch**：LibTorch 版本必须与 CUDA 版本完全匹配，即下载带有 +cu118 后缀的版本。下载 C++ 版本的 [libtorch](https://download.pytorch.org/libtorch/cu118/)。我们选择`libtorch-cxx11-abi-shared-with-deps-2.3.0+cu118.zip`作为下载项目，如果不是cxx11 ABI 版本，则会出现ROS2以及libtorch冲突问题。
 2. **PCT-planner**：将其放置在 `src` 文件夹外单独编译。
 3. **ego-planner-swarm**（ROS2 版本）：已集成在 `src/planner/` 和 `src/uav_simulator/` 中，无需单独下载。原始仓库参考：[ego-planner-swarm](https://github.com/ZJU-FAST-Lab/ego-planner-swarm.git)（ros2_version 分支）
 4. **Fast-lio**：`.auto.sh` 仿真脚本自动发布 `livox/lidar` 和 `livox/imu` 话题，无需额外配置，但需手动设置 `tf` 坐标关系。
@@ -35,6 +35,8 @@ ego-planner-swarm 已集成在 `src/` 目录中，直接在工作空间根目录
 sudo apt-get install libarmadillo-dev libpcl-dev
 colcon build
 ```
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/b4691d6aa11545709920c5d968d335ab.png)
+
 
 ### 3. 安装 PCT-planner
 
@@ -57,6 +59,7 @@ cd PCT_planner/planner/
 ./build_thirdparty.sh
 ./build.sh
 ```
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/b5eafa747b2047c7ac84b74c88eee8a2.png)
 
 ---
 
@@ -65,16 +68,29 @@ cd PCT_planner/planner/
 ### 1. 启动 RL 控制器
 由于 RL 控制器需要手柄，因此需先启动虚拟手柄（注意这个不是控制器！！！）：
 ```bash
-sudo -s
+# 设置权限信息
+# sudo -s 不推荐这个方法，最好使用下面方案
+pip install python-uinput  
+echo 'KERNEL=="uinput", MODE="0666"' | sudo tee /etc/udev/rules.d/99-uinput.rules
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+
+
 source ./install/setup.bash
 ros2 run unitree_guide virtual_joy.py
 ```
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/0f1096904eb9480bb055a1f6d9ecc716.png)
+
 
 然后启动 Gazebo 仿真环境并运行控制器：
 ```bash
+pip install transforms3d tf_transformations 
+sudo apt-get install -y ros-humble-tf-transformations
 . auto.sh  # 等待 Unitree A1 机器人展开
 ros2 run unitree_guide junior_ctrl
 ```
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/d55822ceaa7b470fa04ba1e7405123ed.png)
+
 
 在控制器中：
 - 按键 **2**：站立

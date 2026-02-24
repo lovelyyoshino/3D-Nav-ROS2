@@ -1,20 +1,11 @@
 #!/bin/bash
-echo "Terminating gazebo and junior_ctrl processes..."
-# 查找并关闭 gazebo 进程
-pkill -f gazebo
-if [ $? -eq 0 ]; then
-    echo "Successfully terminated gazebo processes."
-else
-    echo "No gazebo processes found or failed to terminate."
-fi
-
-# 查找并关闭 junior_ctrl 进程
-pkill -f junior_ctrl
-if [ $? -eq 0 ]; then
-    echo "Successfully terminated junior_ctrl processes."
-else
-    echo "No junior_ctrl processes found or failed to terminate."
-fi
+echo "Terminating all related processes..."
+# 先 SIGTERM，等1秒，再 SIGKILL 确保杀干净
+pkill -f "gazebo|junior_ctrl|gzserver|gzclient|spawn_entity|controller_manager/spawner|state_from_gazebo" 2>/dev/null
+sleep 1
+pkill -9 -f "gazebo|junior_ctrl|gzserver|gzclient|spawn_entity|controller_manager/spawner|state_from_gazebo" 2>/dev/null
+sleep 1
+echo "Cleanup done."
 
 # Step 2: 构建工作空间
 echo "Building workspace with colcon..."

@@ -1,5 +1,9 @@
+import os
+from ament_index_python.packages import get_package_share_directory
+
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import Command, LaunchConfiguration, PathJoinSubstitution, TextSubstitution
 from launch_ros.actions import Node
@@ -8,6 +12,21 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
+    # Set GAZEBO_PLUGIN_PATH directly in os.environ BEFORE any launch actions,
+    # so gzserver.launch.py sees it when it reads os.environ in generate_launch_description()
+    ugz_share = get_package_share_directory('unitree_gazebo')
+    livox_share = get_package_share_directory('livox_laser_simulation')
+    extra_plugin_paths = os.pathsep.join([
+        os.path.join(ugz_share, '..', '..', 'lib'),
+        os.path.join(livox_share, '..', '..', 'lib'),
+        '/opt/ros/humble/lib',
+    ])
+    existing = os.environ.get('GAZEBO_PLUGIN_PATH', '')
+    os.environ['GAZEBO_PLUGIN_PATH'] = extra_plugin_paths + (os.pathsep + existing if existing else '')
+
+    # Also set GAZEBO_MODEL_PATH directly
+    os.environ['GAZEBO_MODEL_PATH'] = os.path.join(ugz_share, 'models')
+
     # Declare launch arguments
     wname_arg = DeclareLaunchArgument('wname', default_value='Building')
     rname_arg = DeclareLaunchArgument('rname', default_value='a1')
@@ -40,7 +59,7 @@ def generate_launch_description():
         value_type=str
     )
 
-    # Include Gazebo launch
+    # Include Gazebo launch (server only, we launch gzclient separately without EOL plugin)
     gazebo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([gazebo_ros_share, 'launch', 'gazebo.launch.py'])
@@ -58,7 +77,15 @@ def generate_launch_description():
         }.items()
     )
 
-    # Spawn robot entity
+    # Launch gzclient without the EOL plugin that causes Camera assertion crash
+    gzclient_process = ExecuteProcess(
+        cmd=['gzclient'],
+        output='screen',
+        condition=IfCondition(LaunchConfiguration('gui'))
+    )
+
+    # Spawn robot entity (use -file instead of -topic to avoid DDS discovery issues)
+    urdf_file = PathJoinSubstitution([robot_description_share, 'urdf', 'a1.urdf'])
     spawn_entity_node = Node(
         package='gazebo_ros',
         executable='spawn_entity.py',
@@ -66,11 +93,12 @@ def generate_launch_description():
         output='screen',
         arguments=[
             '-entity', [LaunchConfiguration('rname'), TextSubstitution(text='_gazebo')],
-            '-topic', 'robot_description',
+            '-file', urdf_file,
             '-x', '-5',
             '-y', '7',
             '-z', '0.6',
-            '-unpause'
+            '-unpause',
+            '-timeout', '120'
         ]
     )
 
@@ -140,8 +168,8 @@ def generate_launch_description():
         output='screen',
         parameters=[{
             'laser_blind': 0.5,
-            'min_angle': -7,
-            'max_angle': 55,
+            'min_angle': -7.0,
+            'max_angle': 55.0,
             'use_sim_time': LaunchConfiguration('use_sim_time'),
         }]
     )
@@ -156,6 +184,7 @@ def generate_launch_description():
         debug_arg,
         user_debug_arg,
         gazebo_launch,
+        gzclient_process,
         spawn_entity_node,
         state_from_gazebo_node,
         robot_state_publisher_node,

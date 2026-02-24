@@ -36,7 +36,9 @@ void FSM::initialize(){
 void FSM::run(){
     _startTime = getSystemTime();
     _ctrlComp->sendRecv();
+#ifdef COMPILE_WITH_REAL_ROBOT
     _ctrlComp->ioInterFreeDog->sendRecv();
+#endif
     _ctrlComp->runWaveGen();
     _ctrlComp->estimator->run();
     if(!checkSafty()){

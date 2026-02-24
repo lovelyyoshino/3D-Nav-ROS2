@@ -28,6 +28,7 @@ void State_Passive::enter(){
         }
     }
 
+#ifdef COMPILE_WITH_REAL_ROBOT
     if (real == true)
     {
         for(int j=0; j<12; j++){
@@ -36,6 +37,7 @@ void State_Passive::enter(){
         }
         _ctrlComp->ioInterFreeDog->sendCmd();
     }
+#endif
 
     _ctrlComp->setAllSwing();
 }

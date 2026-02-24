@@ -9,6 +9,7 @@
     <xacro:include filename="$(find a1_description)/xacro/leg.xacro"/>
     <xacro:include filename="$(find a1_description)/xacro/stairs.xacro"/>
     <xacro:include filename="$(find a1_description)/xacro/gazebo.xacro"/>
+    <xacro:include filename="$(find a1_description)/xacro/transmission.xacro"/>
     <!-- <xacro:include filename="$(find a1_gazebo)/launch/stairs.urdf.xacro"/> -->
 
     <!-- <xacro:stairs stairs="15" xpos="0" ypos="0" zpos="0" /> -->

@@ -24,7 +24,9 @@
 #include <rclcpp/rclcpp.hpp>
 #endif // RUN_ROS
 
+#ifdef COMPILE_WITH_REAL_ROBOT
 #include "interface/IOFREEDOGSDK.h"
+#endif
 bool running = true;
 
 // over watch the ctrl+c command
@@ -68,8 +70,10 @@ int main(int argc, char **argv)
     ioInter = new IOSDK();
     ctrlPlat = CtrlPlatform::REALROBOT;
 #endif // COMPILE_WITH_REAL_ROBOT
-    IOFREEDOGSDK *ioInter_freedog;
+    IOFREEDOGSDK *ioInter_freedog = nullptr;
+#ifdef COMPILE_WITH_REAL_ROBOT
     ioInter_freedog = new IOFREEDOGSDK();
+#endif
     CtrlComponents *ctrlComp = new CtrlComponents(ioInter,ioInter_freedog);
     ctrlComp->ctrlPlatform = ctrlPlat;
     ctrlComp->dt = 0.002; // run at 500hz

@@ -21,7 +21,9 @@ void State_FixedStand::enter(){
     for(int i=0; i<12; i++){
         _lowCmd->motorCmd[i].q = _lowState->motorState[i].q;
         _startPos[i] = _lowState->motorState[i].q;
+#ifdef COMPILE_WITH_REAL_ROBOT
         _startPos_real[i] = _ctrlComp->ioInterFreeDog->low_state.motorState_free_dog[i].q;
+#endif
     }
     _ctrlComp->setAllStance();
 }
@@ -33,6 +35,7 @@ void State_FixedStand::run(){
         _lowCmd->motorCmd[j].q = (1 - _percent)*_startPos[j] + _percent*_targetPos[j]; 
     }
 
+#ifdef COMPILE_WITH_REAL_ROBOT
     if (real == true){
         for(int j=0; j<12; j++){
             std::vector<double> joint{(1 - _percent)*_startPos_real[j] + \
@@ -40,6 +43,7 @@ void State_FixedStand::run(){
             _ctrlComp->ioInterFreeDog->setCmd(j,joint);
         }
     }
+#endif
 }
 
 void State_FixedStand::exit(){

@@ -12,7 +12,11 @@
 #include "Gait/WaveGenerator.h"
 #include "control/Estimator.h"
 #include "control/BalanceCtrl.h"
+#ifdef COMPILE_WITH_REAL_ROBOT
 #include "interface/IOFREEDOGSDK.h"
+#else
+class IOFREEDOGSDK;
+#endif
 #include <string>
 #include <iostream>
 

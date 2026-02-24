@@ -43,11 +43,13 @@ void State_RL::enter(){
     // }
     // else if(real == true)
     // {
+#ifdef COMPILE_WITH_REAL_ROBOT
         for(int i=0; i<12; i++){
             float c_joint = _ctrlComp->ioInterFreeDog->low_state.motorState_free_dog[i].q;
             std::vector<double> joint{c_joint, 0, 0, 80, 1};
             _ctrlComp->ioInterFreeDog->setCmd(i,joint);
         }
+#endif
     // }
     for (int i = 0; i < HISTORY_LEN; i++)
     {
@@ -94,11 +96,13 @@ FSMStateName State_RL::checkChange(){
                     _startPos[i] = _lowState->motorState[i].q;
                 }
             }
+#ifdef COMPILE_WITH_REAL_ROBOT
             else if(real == true){
                 for(int i=0; i<12; i++){
                     _startPos[i] = _ctrlComp->ioInterFreeDog->low_state.motorState_free_dog[i].q;
                 }
             }
+#endif
             _percent = 0;
             std::cout << "cnt: " << _cnt << std::endl;
             // open_amp_save_file();
@@ -190,7 +194,9 @@ void State_RL::save_amp_obs_thread()
                     std::cout << _targetPos_map[_cnt][j] << " ";
                     float t_joint = (1 - _percent)*_startPos[j] + _percent*_targetPos_map[_cnt][reindex[j]];
                     std::vector<double> joint{t_joint, 0, 0, 80, 1};
+#ifdef COMPILE_WITH_REAL_ROBOT
                     _ctrlComp->ioInterFreeDog->setCmd(j,joint);
+#endif
                 }
                 std::cout << std::endl;
             // }
@@ -259,6 +265,7 @@ void State_RL::refresh_rl_obs(){
             obs_tensor.unsqueeze(0)  // 将当前 obs_tensor 插入到历史中
         }, 0);  // 按行（第0维）拼接
     }
+#ifdef COMPILE_WITH_REAL_ROBOT
     else if (real == true)
     {
         _B2G_RotMat = _ctrlComp->ioInterFreeDog->getRotMat();
@@ -292,6 +299,7 @@ void State_RL::refresh_rl_obs(){
             obs_tensor.unsqueeze(0)  // 将当前 obs_tensor 插入到历史中
         }, 0);  // 按行（第0维）拼接
     }
+#endif
 }
 
 

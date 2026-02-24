@@ -20,6 +20,7 @@ endif()
 
 set(EXTRA_LIBS -pthread libunitree_legged_sdk.a)
 set(CMAKE_CXX_FLAGS "-O3 -fPIC")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -no-pie")
 set(CMAKE_CXX_STANDARD 14)
 
 find_package(ament_cmake REQUIRED)
