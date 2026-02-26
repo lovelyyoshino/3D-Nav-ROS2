@@ -114,7 +114,7 @@ def generate_launch_description():
             'max_acc': str(6.0),
             'planning_horizon': str(7.5),
             'use_distinctive_trajs': 'True',
-            'flight_type': str(2),
+            'flight_type': str(1),
             'point_num': str(4),
             'point0_x': str(15.0),
             'point0_y': str(0.0),
@@ -152,6 +152,22 @@ def generate_launch_description():
             {'traj_server/time_forward': 1.0}
         ]
     )
+
+    # Waypoint generator node
+    waypoint_generator_node = Node(
+        package='waypoint_generator',
+        executable='waypoint_generator',
+        name='waypoint_generator',
+        output='screen',
+        remappings=[
+            ('odom', odom_topic),
+            ('goal', '/move_base_simple/goal'),
+            ('traj_start_trigger', '/traj_start_trigger')
+        ],
+        parameters=[
+            {'waypoint_type': 'manual-lonely-waypoint'}
+        ]
+    )
     
     # Include simulator 
     simulator_include = IncludeLaunchDescription(PythonLaunchDescriptionSource(
@@ -185,6 +201,7 @@ def generate_launch_description():
     ld.add_action(mockamap_node)
     ld.add_action(advanced_param_include)
     ld.add_action(traj_server_node)
+    ld.add_action(waypoint_generator_node)
     ld.add_action(simulator_include)
 
     return ld

@@ -116,13 +116,9 @@ ros2 launch ego_planner single_run_in_sim.launch.py
 ros2 launch ego_planner swarm.launch.py
 # 或大规模集群模式
 ros2 launch ego_planner swarm_large.launch.py
-```
 
-可选参数：
-- `use_mockamap`：地图生成方式，默认 `False`（Random Forest），`True` 使用 mockamap
-- `use_dynamic`：是否考虑动力学，默认 `False`
-```bash
-ros2 launch ego_planner single_run_in_sim.launch.py use_mockamap:=True use_dynamic:=False
+#我自己使用的
+ros2 launch ego_planner run_with_liwo.launch.py
 ```
 
 修改 `single_run_in_sim.launch.py` 文件中的 `flight_type` 参数可切换导航模式：
@@ -131,6 +127,13 @@ ros2 launch ego_planner single_run_in_sim.launch.py use_mockamap:=True use_dynam
 DeclareLaunchArgument('flight_type', default_value='1')
 # 3: 使用 move_base 的路径
 DeclareLaunchArgument('flight_type', default_value='3')
+```
+如果要切换到实物FAST_LIWO 模式：
+
+```bash
+ros2 launch ego_planner run_with_liwo.launch.py \odom_topic:=x_fast_liwo/lio_odom \
+cloud_topic:=x_fast_liwo/world_cloud \
+frame_id:=map
 ```
 
 ### 3. 启动 PCT-planner
