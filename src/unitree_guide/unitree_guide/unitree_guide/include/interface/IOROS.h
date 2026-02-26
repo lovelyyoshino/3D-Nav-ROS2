@@ -17,6 +17,7 @@
 #include "nav_msgs/msg/odometry.hpp"
 #include "rosgraph_msgs/msg/clock.hpp"
 #include <sensor_msgs/msg/joy.hpp>
+#include <thread>
 
 class IOROS : public IOInterface{
 public:
@@ -37,6 +38,8 @@ rclcpp::Publisher<unitree_legged_msgs::msg::MotorCmd>::SharedPtr _servo_pub[12];
 unitree_legged_msgs::msg::LowCmd _lowCmd;
 unitree_legged_msgs::msg::LowState _lowState;
 std::string _robot_name;
+rclcpp::executors::SingleThreadedExecutor _executor;
+std::thread _spin_thread;
 
 //repeated functions for multi-thread
 void initRecv();

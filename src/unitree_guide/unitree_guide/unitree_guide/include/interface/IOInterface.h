@@ -34,8 +34,8 @@ std::array<double, 3> _RL_foot_pos = {0.0, 0.0, 0.0};
 std::array<double, 3> _RL_foot_vel = {0.0, 0.0, 0.0};
 std::array<double, 3> _RR_foot_pos = {0.0, 0.0, 0.0};
 std::array<double, 3> _RR_foot_vel = {0.0, 0.0, 0.0};
-std::vector<float> axes;
-std::vector<int> buttons;
+std::vector<float> axes = std::vector<float>(8, 0.0f);
+std::vector<int> buttons = std::vector<int>(12, 0);
 uint32_t current_time = 0;
 protected:
 CmdPanel *cmdPanel;

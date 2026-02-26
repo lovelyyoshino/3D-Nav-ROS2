@@ -16,7 +16,10 @@ import numpy as np
 from threading import Lock
 
 from sensor_msgs.msg import PointCloud, PointCloud2, PointField
-from unitree_guide.msg import CustomMsg, CustomPoint
+try:
+    from livox_ros_driver2.msg import CustomMsg, CustomPoint
+except ImportError:
+    from unitree_guide.msg import CustomMsg, CustomPoint
 import sensor_msgs_py.point_cloud2 as pc2
 from nav_msgs.msg import Odometry
 from std_msgs.msg import Header
@@ -52,7 +55,7 @@ def _get_struct_fmt(pointcloud2):
 def pointcloud2_to_custommsg(node, pointcloud2):
     custom_msg = CustomMsg()
     custom_msg.header = pointcloud2.header
-    custom_msg.timebase = node.get_clock().now().nanoseconds
+    custom_msg.timebase = pointcloud2.header.stamp.sec * 1_000_000_000 + pointcloud2.header.stamp.nanosec
     custom_msg.point_num = pointcloud2.width
     custom_msg.lidar_id = 1  # Assuming lidar_id is 1
     custom_msg.rsvd = [0, 0, 0]  # Reserved fields
@@ -64,7 +67,7 @@ def pointcloud2_to_custommsg(node, pointcloud2):
         x, y, z = struct.unpack(fmt, point_data)
 
         custom_point = CustomPoint()
-        custom_point.offset_time = node.get_clock().now().nanoseconds - custom_msg.timebase
+        custom_point.offset_time = 0  # All points in same scan share the same timestamp
         custom_point.x = x
         custom_point.y = y
         custom_point.z = z

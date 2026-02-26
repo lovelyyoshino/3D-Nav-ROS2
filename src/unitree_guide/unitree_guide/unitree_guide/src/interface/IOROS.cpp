@@ -23,10 +23,8 @@ IOROS::IOROS():IOInterface(){
 
     // start subscriber
     initRecv();
-    rclcpp::executors::SingleThreadedExecutor executor;
-    executor.add_node(_node);
-    std::thread spin_thread([&executor]() { executor.spin(); });
-    spin_thread.detach();
+    _executor.add_node(_node);
+    _spin_thread = std::thread([this]() { _executor.spin(); });
     usleep(300000);     //wait for subscribers start
     // initialize publisher
     initSend();
@@ -38,6 +36,10 @@ IOROS::IOROS():IOInterface(){
 
 IOROS::~IOROS(){
     delete cmdPanel;
+    _executor.cancel();
+    if (_spin_thread.joinable()) {
+        _spin_thread.join();
+    }
     rclcpp::shutdown();
 }
 
@@ -61,7 +63,6 @@ void IOROS::sendCmd(const LowlevelCmd *lowCmd){
     for(int m(0); m < 12; ++m){
         _servo_pub[m]->publish(_lowCmd.motor_cmd[m]);
     }
-    rclcpp::spin_some(_node);
 }
 
 void IOROS::recvState(LowlevelState *state){
@@ -114,7 +115,8 @@ void IOROS::initRecv(){
     _foot_states_sub[3] = _node->create_subscription<nav_msgs::msg::Odometry>("/ground_truth/RR_foot", 1, std::bind(&IOROS::RR_footCallback, this, std::placeholders::_1));
     _base_w_sub = _node->create_subscription<nav_msgs::msg::Odometry>("/ground_truth/base_w", 1, std::bind(&IOROS::baseWorldCallback, this, std::placeholders::_1));
     _base_t_sub = _node->create_subscription<nav_msgs::msg::Odometry>("/ground_truth/base_trunk", 1, std::bind(&IOROS::baseTrunkCallback, this, std::placeholders::_1));
-    _time_sub = _node->create_subscription<rosgraph_msgs::msg::Clock>("/clock", 1, std::bind(&IOROS::timeCallback, this, std::placeholders::_1));
+    auto clock_qos = rclcpp::QoS(1).best_effort();
+    _time_sub = _node->create_subscription<rosgraph_msgs::msg::Clock>("/clock", clock_qos, std::bind(&IOROS::timeCallback, this, std::placeholders::_1));
     joy_sub = _node->create_subscription<sensor_msgs::msg::Joy>("/joy", 1, std::bind(&IOROS::joyCallback, this, std::placeholders::_1));
 }
 

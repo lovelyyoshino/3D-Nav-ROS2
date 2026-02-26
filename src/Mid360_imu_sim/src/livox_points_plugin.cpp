@@ -69,7 +69,7 @@ void LivoxPointsPlugin::Load(gazebo::sensors::SensorPtr _parent, sdf::ElementPtr
     if (!rclcpp::ok()) {
         rclcpp::init(argc, argv);
     }
-    rosNode = rclcpp::Node::make_shared(curr_scan_topic);
+    rosNode = rclcpp::Node::make_shared("livox_points_plugin");
     rosPointPub = rosNode->create_publisher<sensor_msgs::msg::PointCloud>(curr_scan_topic, 5);
 
     raySensor = _parent;
@@ -141,7 +141,9 @@ void LivoxPointsPlugin::OnNewLaserScans() {
         auto verticle_incre = VerticalAngleResolution();
 
         sensor_msgs::msg::PointCloud scan_point;
-        scan_point.header.stamp = rosNode->now();
+        auto sim_time = world->SimTime();
+        scan_point.header.stamp.sec = sim_time.sec;
+        scan_point.header.stamp.nanosec = sim_time.nsec;
         scan_point.header.frame_id = raySensor->Name();
         auto &scan_points = scan_point.points;
 

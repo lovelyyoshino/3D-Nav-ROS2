@@ -108,16 +108,19 @@ namespace unitree_legged_control
         }
 
         // Start command subscriber
+        // Use node name as topic prefix so each controller gets its own
+        // command/state topics: /a1_gazebo/FR_thigh_controller/command, etc.
+        std::string node_name = get_node()->get_name();
         sub_ft = get_node()->create_subscription<geometry_msgs::msg::WrenchStamped>(
-            std::string(name_space) + "/" + "joint_wrench", 1,
+            node_name + "/joint_wrench", 1,
             std::bind(&UnitreeJointController::setTorqueCB, this, std::placeholders::_1));
         sub_cmd = get_node()->create_subscription<unitree_legged_msgs::msg::MotorCmd>(
-            "command", 20,
+            node_name + "/command", 20,
             std::bind(&UnitreeJointController::setCommandCB, this, std::placeholders::_1));
 
         // Start realtime state publisher
         auto state_pub = get_node()->create_publisher<unitree_legged_msgs::msg::MotorState>(
-            std::string(name_space) + "/state", 1);
+            node_name + "/state", 1);
         controller_state_publisher_ = std::make_unique<realtime_tools::RealtimePublisher<unitree_legged_msgs::msg::MotorState>>(state_pub);
 
         return controller_interface::CallbackReturn::SUCCESS;
@@ -142,15 +145,19 @@ namespace unitree_legged_control
     // Controller startup in realtime
     controller_interface::CallbackReturn UnitreeJointController::on_activate(const rclcpp_lifecycle::State & /*previous_state*/)
     {
-        // lastCmd.kp = 0;
-        // lastCmd.kd = 0;
-        double init_pos = state_interfaces_[0].get_value(); // position
-        lastCmd.q = init_pos;
-        lastState.q = init_pos;
+        // Zero gains so robot is limp on spawn (like original ROS1 starting()).
+        // Actual joint position is read on the first update() call via firstRun flag,
+        // because state_interfaces may not have valid data yet here.
+        lastCmd.mode = PMSM;
+        lastCmd.q = 0;
+        lastCmd.kp = 0;
+        lastCmd.kd = 0;
         lastCmd.dq = 0;
-        lastState.dq = 0;
         lastCmd.tau = 0;
+        lastState.q = 0;
+        lastState.dq = 0;
         lastState.tau_est = 0;
+        firstRun = true;
         command.initRT(lastCmd);
 
         pid_controller_.reset();
@@ -162,6 +169,19 @@ namespace unitree_legged_control
     controller_interface::return_type UnitreeJointController::update(const rclcpp::Time & /*time*/, const rclcpp::Duration & period)
     {
         double currentPos, currentVel, calcTorque;
+
+        // On first update, seed lastState with actual joint position
+        // (state_interfaces may not be valid during on_activate).
+        if(firstRun){
+            double initPos = state_interfaces_[0].get_value();
+            lastState.q = initPos;
+            lastState.dq = 0;
+            // Also update the RT command so the robot holds current position with zero gains
+            lastCmd.q = initPos;
+            command.writeFromNonRT(lastCmd);
+            firstRun = false;
+        }
+
         lastCmd = *(command.readFromRT());
 
         // set command data

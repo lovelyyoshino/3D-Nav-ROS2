@@ -41,9 +41,14 @@ void FSM::run(){
 #endif
     _ctrlComp->runWaveGen();
     _ctrlComp->estimator->run();
-    if(!checkSafty()){
-        _ctrlComp->ioInter->setPassive();
-        std::cerr << "[FSM SAFETY] Robot tilt > 60 deg, switching to PASSIVE" << std::endl;
+    // Skip safety check during PASSIVE (already safe) and FIXEDSTAND (standing up
+    // from ground requires tilt > 60 deg — the check would block the standup entirely)
+    if(_currentState->_stateName != FSMStateName::PASSIVE &&
+       _currentState->_stateName != FSMStateName::FIXEDSTAND){
+        if(!checkSafty()){
+            _ctrlComp->ioInter->setPassive();
+            std::cerr << "[FSM SAFETY] Robot tilt > 60 deg, switching to PASSIVE" << std::endl;
+        }
     }
 
     if(_mode == FSMMode::NORMAL){

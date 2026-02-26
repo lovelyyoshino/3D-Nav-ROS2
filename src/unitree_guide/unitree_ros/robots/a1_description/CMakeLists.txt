@@ -3,7 +3,7 @@ project(a1_description)
 
 find_package(ament_cmake REQUIRED)
 
-install(DIRECTORY config meshes urdf xacro
+install(DIRECTORY config meshes urdf xacro scan_mode
     DESTINATION share/${PROJECT_NAME}
     OPTIONAL
 )

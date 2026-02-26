@@ -45,7 +45,7 @@ install(TARGETS
     RUNTIME DESTINATION bin
 )
 
-install(DIRECTORY launch worlds models
+install(DIRECTORY launch worlds models config
     DESTINATION share/${PROJECT_NAME}
     OPTIONAL
 )

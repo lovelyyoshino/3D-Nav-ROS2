@@ -252,15 +252,19 @@ int main(int argc, char **argv)
     servo_pub[10] = node->create_publisher<unitree_legged_msgs::msg::MotorCmd>("/" + robot_name + "_gazebo/RL_thigh_controller/command", 1);
     servo_pub[11] = node->create_publisher<unitree_legged_msgs::msg::MotorCmd>("/" + robot_name + "_gazebo/RL_calf_controller/command", 1);
 
-    motion_init();
+    // Skip motion_init() — the user wants the robot to start lying down
+    // (趴着) and only stand up when they press '2' (FIXEDSTAND via FSM).
+    // The on_activate in joint_controller already holds a crouched pose
+    // so the robot lands on its belly.  Servo only needs to aggregate
+    // controller state into the lowState topic for junior_ctrl / IOROS.
+    RCLCPP_INFO(g_node->get_logger(),
+                "[servo] Skipping standup. Publishing lowState only — "
+                "waiting for junior_ctrl to take over.");
 
     while (rclcpp::ok()){
-        /*
-        control logic
-        */
         lowState_pub->publish(lowState);
-        sendServoCmd();
-
+        rclcpp::spin_some(g_node);
+        usleep(2000);  // 500 Hz state publish, no motor commands
     }
     rclcpp::shutdown();
     return 0;

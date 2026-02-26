@@ -140,11 +140,6 @@
             </inertial>
         </link>
 
-        <joint name="${name}_foot_fixed" type="fixed">
-            <origin rpy="0 0 0" xyz="0 0 ${-(calf_length)}"/>
-            <parent link="${name}_calf"/>
-            <child link="${name}_foot"/>
-        </joint>
         <joint name="${name}_foot_joint_get_position" type="revolute">
             <origin rpy="0 0 0" xyz="0 0 ${-(calf_length)}"/>
             <parent link="${name}_calf"/>

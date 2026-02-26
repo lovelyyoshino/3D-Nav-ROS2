@@ -6,8 +6,6 @@
             <ros>
                 <namespace>/a1_gazebo</namespace>
             </ros>
-            <robot_param>robot_description</robot_param>
-            <robot_param_node>/robot_state_publisher</robot_param_node>
             <parameters>$(find a1_description)/config/robot_control.yaml</parameters>
         </plugin>
     </gazebo>
@@ -42,7 +40,7 @@
                 <namespace>/a1_gazebo</namespace>
                 <remapping>wrench:=/apply_force/trunk</remapping>
             </ros>
-            <link_name>trunk</link_name>
+            <link_name>base</link_name>
         </plugin>
     </gazebo>
 
@@ -73,7 +71,7 @@
             </ros>
             <update_rate>100</update_rate>
             <body_name>base</body_name>
-            <frame_name>trunk</frame_name>
+            <frame_name>base</frame_name>
             <xyz_offset>0 0 0</xyz_offset>
             <rpy_offset>0 0 0</rpy_offset>
         </plugin>
@@ -155,7 +153,7 @@
     <gazebo reference="FR_calf">
         <sensor name="FR_foot_contact" type="contact">
         <update_rate>100</update_rate>
-        <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+        <plugin name="FR_contactPlugin" filename="libunitreeFootContactPlugin.so"/>
         <contact>
             <collision>FR_calf_fixed_joint_lump__FR_foot_collision_1</collision>
         </contact>
@@ -164,7 +162,7 @@
     <gazebo reference="FL_calf">
         <sensor name="FL_foot_contact" type="contact">
         <update_rate>100</update_rate>
-        <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+        <plugin name="FL_contactPlugin" filename="libunitreeFootContactPlugin.so"/>
         <contact>
             <collision>FL_calf_fixed_joint_lump__FL_foot_collision_1</collision>
         </contact>
@@ -173,7 +171,7 @@
     <gazebo reference="RR_calf">
         <sensor name="RR_foot_contact" type="contact">
         <update_rate>100</update_rate>
-        <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+        <plugin name="RR_contactPlugin" filename="libunitreeFootContactPlugin.so"/>
         <contact>
             <collision>RR_calf_fixed_joint_lump__RR_foot_collision_1</collision>
         </contact>
@@ -182,7 +180,7 @@
     <gazebo reference="RL_calf">
         <sensor name="RL_foot_contact" type="contact">
         <update_rate>100</update_rate>
-        <plugin name="contactPlugin" filename="libunitreeFootContactPlugin.so"/>
+        <plugin name="RL_contactPlugin" filename="libunitreeFootContactPlugin.so"/>
         <contact>
             <collision>RL_calf_fixed_joint_lump__RL_foot_collision_1</collision>
         </contact>
@@ -192,28 +190,28 @@
     <!-- Visualization of Foot contacts. -->
     <gazebo reference="FR_foot">
         <visual>
-            <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+            <plugin name="FR_drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
                 <topicName>FR_foot_contact</topicName>
             </plugin>
         </visual>
     </gazebo>
     <gazebo reference="FL_foot">
         <visual>
-            <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+            <plugin name="FL_drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
                 <topicName>FL_foot_contact</topicName>
             </plugin>
         </visual>
     </gazebo>
     <gazebo reference="RR_foot">
         <visual>
-            <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+            <plugin name="RR_drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
                 <topicName>RR_foot_contact</topicName>
             </plugin>
         </visual>
     </gazebo>
     <gazebo reference="RL_foot">
         <visual>
-            <plugin name="drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
+            <plugin name="RL_drawForcePlugin" filename="libunitreeDrawForcePlugin.so">
                 <topicName>RL_foot_contact</topicName>
             </plugin>
         </visual>
@@ -394,7 +392,7 @@
             <visualize>true</visualize>
                     <samples>24000</samples>
                     <downsample>1</downsample>
-                    <csv_file_name>package://a1_description/scan_mode/mid360.csv</csv_file_name>
+                    <csv_file_name>$(find a1_description)/scan_mode/mid360.csv</csv_file_name>
                     <ros_topic>/scan</ros_topic>
                     <frameName>laser_livox</frameName>
             </plugin>
@@ -405,11 +403,11 @@
     <!-- gazebo livox imu-link plugins (ROS2 format) -->
     <gazebo reference="livox_imu_link">
     <gravity>true</gravity>
-    <sensor name="imu_sensor" type="imu">
+    <sensor name="livox_imu_sensor" type="imu">
         <always_on>true</always_on>
         <update_rate>1000</update_rate>
         <visualize>true</visualize>
-        <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <plugin filename="libgazebo_ros_imu_sensor.so" name="livox_imu_plugin">
             <ros>
                 <namespace>/a1_gazebo</namespace>
                 <remapping>~/out:=/livox/imu</remapping>

@@ -1,4 +1,4 @@
-controller_manager:
+/**/controller_manager:
   ros__parameters:
     update_rate: 1000
 
@@ -38,65 +38,65 @@ controller_manager:
       type: unitree_legged_control/UnitreeJointController
 
 # FL Controllers parameters
-FL_hip_controller:
+/**/FL_hip_controller:
   ros__parameters:
     joint: FL_hip_joint
     pid: {p: 100.0, i: 0.0, d: 5.0}
 
-FL_thigh_controller:
+/**/FL_thigh_controller:
   ros__parameters:
     joint: FL_thigh_joint
     pid: {p: 300.0, i: 0.0, d: 8.0}
 
-FL_calf_controller:
+/**/FL_calf_controller:
   ros__parameters:
     joint: FL_calf_joint
     pid: {p: 300.0, i: 0.0, d: 8.0}
 
 # FR Controllers parameters
-FR_hip_controller:
+/**/FR_hip_controller:
   ros__parameters:
     joint: FR_hip_joint
     pid: {p: 100.0, i: 0.0, d: 5.0}
 
-FR_thigh_controller:
+/**/FR_thigh_controller:
   ros__parameters:
     joint: FR_thigh_joint
     pid: {p: 300.0, i: 0.0, d: 8.0}
 
-FR_calf_controller:
+/**/FR_calf_controller:
   ros__parameters:
     joint: FR_calf_joint
     pid: {p: 300.0, i: 0.0, d: 8.0}
 
 # RL Controllers parameters
-RL_hip_controller:
+/**/RL_hip_controller:
   ros__parameters:
     joint: RL_hip_joint
     pid: {p: 100.0, i: 0.0, d: 5.0}
 
-RL_thigh_controller:
+/**/RL_thigh_controller:
   ros__parameters:
     joint: RL_thigh_joint
     pid: {p: 300.0, i: 0.0, d: 8.0}
 
-RL_calf_controller:
+/**/RL_calf_controller:
   ros__parameters:
     joint: RL_calf_joint
     pid: {p: 300.0, i: 0.0, d: 8.0}
 
 # RR Controllers parameters
-RR_hip_controller:
+/**/RR_hip_controller:
   ros__parameters:
     joint: RR_hip_joint
     pid: {p: 100.0, i: 0.0, d: 5.0}
 
-RR_thigh_controller:
+/**/RR_thigh_controller:
   ros__parameters:
     joint: RR_thigh_joint
     pid: {p: 300.0, i: 0.0, d: 8.0}
 
-RR_calf_controller:
+/**/RR_calf_controller:
   ros__parameters:
     joint: RR_calf_joint
     pid: {p: 300.0, i: 0.0, d: 8.0}

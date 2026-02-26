@@ -30,11 +30,11 @@ def generate_launch_description():
     odom_topic_cmd = DeclareLaunchArgument('odom_topic', default_value=odom_topic, description='Odometry topic')
 
     # 地图属性以及是否使用动力学仿真
-    use_mockamap = LaunchConfiguration('use_mockamap', default=False) # map_generator or mockamap 
-    
+    use_mockamap = LaunchConfiguration('use_mockamap', default='false') # map_generator or mockamap
+
     use_mockamap_cmd = DeclareLaunchArgument('use_mockamap', default_value=use_mockamap, description='Choose map type, map_generator or mockamap')
-    
-    use_dynamic = LaunchConfiguration('use_dynamic', default=False)  
+
+    use_dynamic = LaunchConfiguration('use_dynamic', default='false')
     use_dynamic_cmd = DeclareLaunchArgument('use_dynamic', default_value=use_dynamic, description='Use Drone Simulation Considering Dynamics or Not')
     
     # map

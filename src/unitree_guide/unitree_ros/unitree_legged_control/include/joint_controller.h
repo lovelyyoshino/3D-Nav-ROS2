@@ -48,6 +48,7 @@ public:
         unitree_legged_msgs::msg::MotorCmd lastCmd;
         unitree_legged_msgs::msg::MotorState lastState;
         ServoCmd servoCmd;
+        bool firstRun = true;
 
         UnitreeJointController();
         ~UnitreeJointController();

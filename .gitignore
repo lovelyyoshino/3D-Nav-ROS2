@@ -7,6 +7,40 @@ benchmark_haha.zip
 rebound_planner_BB.zip
 
 .omc
-install
-log
+install/
+log/
+
+# PCT_planner
 PCT_planner/planner/lib/
+PCT_planner/tomography/scripts/__pycache__/
+PCT_planner/planner/scripts/__pycache__/
+PCT_planner/planner/scripts/utils/__pycache__/
+PCT_planner/planner/config/__pycache__/
+PCT_planner/tomography/config/__pycache__/
+PCT_planner/**/*.pyc
+PCT_planner/**/*.pcd
+PCT_planner/**/*.pkl
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.eggs/
+
+# C++ build
+*.o
+*.so
+*.a
+*.dylib
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# ROS2
+*.log
+*.bag
+
+# OS
+.DS_Store
+Thumbs.db

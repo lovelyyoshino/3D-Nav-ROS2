@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 #endif
     CtrlComponents *ctrlComp = new CtrlComponents(ioInter,ioInter_freedog);
     ctrlComp->ctrlPlatform = ctrlPlat;
-    ctrlComp->dt = 0.002; // run at 500hz
+    ctrlComp->dt = 0.004; // run at 250hz
     ctrlComp->running = &running;
 
 #ifdef ROBOT_TYPE_A1

@@ -12,6 +12,7 @@ State_RL::State_RL(CtrlComponents *ctrlComp)
     gravity(1,0) = 0.0;
     gravity(2,0) = -0.98;
     //在构造函数中初始化，订阅
+    node_ = rclcpp::Node::make_shared("state_rl");
     this->Sub_ = node_->create_subscription<geometry_msgs::msg::Twist>(
         "/cmd_vel", 1000,
         std::bind(&FSMState::cmdVelCallback, this, std::placeholders::_1));
@@ -122,7 +123,8 @@ void State_RL::infer_thread_callback()
     while(infer_thread_runnning == State_RL::RUNNING)
     {
         long long _start_time = getTime();
-        // std::cout << "_start_time" << _start_time << std::endl;
+        // Process /cmd_vel subscription callbacks
+        rclcpp::spin_some(node_);
         refresh_rl_obs();
         torch::Tensor flattened_obs = obs_history_tensor.view({1, HISTORY_LEN * 45});
         if (debug == true)

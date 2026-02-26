@@ -52,5 +52,12 @@
             <pose>0 0 0 0 0 0</pose>   <!-- 模型位姿（x,y,z,r,p,y），默认放在原点 -->
         </include>
 
+        <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+            <ros>
+                <namespace>/gazebo</namespace>
+            </ros>
+            <update_rate>100</update_rate>
+        </plugin>
+
     </world>
 </sdf>

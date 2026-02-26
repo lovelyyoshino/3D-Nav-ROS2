@@ -86,10 +86,14 @@ ros2 run unitree_guide virtual_joy.py
 ```bash
 pip install transforms3d tf_transformations 
 sudo apt-get install -y ros-humble-tf-transformations
-. auto.sh  # 等待 Unitree A1 机器人展开
+. auto.sh  # 等待 Unitree A1 机器人展开（第一次需要大概4分钟左右如果不行需要调整timeout，src/unitree_guide/unitree_guide/unitree_guide/launch/gazeboSim.launch.py，或者我建议先运行timeout 300 ros2 launch unitree_guide gazeboSim.launch.py gui:=false 来完成工作）
+```
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/4f16b7ec3415416c8ffdfdca3327af4d.png)
+
+```bash
 ros2 run unitree_guide junior_ctrl
 ```
-![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/d55822ceaa7b470fa04ba1e7405123ed.png)
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/8bb9ed248a8d457bb1e25400c69dcaf1.png)
 
 
 在控制器中：
@@ -138,9 +142,10 @@ python3 tomography.py --scene Building
 
 # 发布plan任务，启用interactive_marker_server
 cd planner/scripts/
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:home/YOUR-NAME/3d-navi/PCT_planner/planner/lib/3rdparty/gtsam-4.1.1/install/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/media/bigdisk/3D-Nav-ROS2/PCT_planner/planner/lib/3rdparty/gtsam-4.1.1/install/lib
 python3 plan.py --scene Building
 ```
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/71b2629cb08e448ebcb7a2d2e879d875.png)
 
 > ⚠️ **注意**：如果地图配置更改，需重新生成地图，路径规划器才会重新规划路径。
 
