@@ -16,14 +16,15 @@ public:
 IOInterface(){}
 ~IOInterface(){delete cmdPanel;}
 virtual void sendRecv(const LowlevelCmd *cmd, LowlevelState *state) = 0;
+virtual void resetSimulation(){}
 void zeroCmdPanel(){cmdPanel->setZero();}
 void setPassive(){cmdPanel->setPassive();}
 std::array<double, 3> _base_w_pos = {0.0, 0.0, 0.0};
-std::array<double, 4> _base_w_ori = {0.0, 0.0, 0.0, 0.1};
+std::array<double, 4> _base_w_ori = {0.0, 0.0, 0.0, 1.0};
 std::array<double, 3> _base_w_linear_vel = {0.0, 0.0, 0.0};
 std::array<double, 3> _base_w_angular_vel = {0.0, 0.0, 0.0};
 std::array<double, 3> _base_t_pos = {0.0, 0.0, 0.0};
-std::array<double, 4> _base_t_ori = {0.0, 0.0, 0.0, 0.1};
+std::array<double, 4> _base_t_ori = {0.0, 0.0, 0.0, 1.0};
 std::array<double, 3> _base_t_linear_vel = {0.0, 0.0, 0.0};
 std::array<double, 3> _base_t_angular_vel = {0.0, 0.0, 0.0};
 std::array<double, 3> _FL_foot_pos = {0.0, 0.0, 0.0};

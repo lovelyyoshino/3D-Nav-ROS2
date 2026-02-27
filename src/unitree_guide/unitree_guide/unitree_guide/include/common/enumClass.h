@@ -31,6 +31,7 @@ enum class UserCommand{
     L1_A,       // swingTest
     L1_Y,        // stepTest
     RL,
+    RESET_SIM,
 };
 
 enum class FrameType{

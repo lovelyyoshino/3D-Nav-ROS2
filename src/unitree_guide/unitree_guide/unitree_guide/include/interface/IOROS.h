@@ -17,6 +17,7 @@
 #include "nav_msgs/msg/odometry.hpp"
 #include "rosgraph_msgs/msg/clock.hpp"
 #include <sensor_msgs/msg/joy.hpp>
+#include <std_srvs/srv/empty.hpp>
 #include <thread>
 
 class IOROS : public IOInterface{
@@ -24,6 +25,7 @@ public:
 IOROS();
 ~IOROS();
 void sendRecv(const LowlevelCmd *cmd, LowlevelState *state);
+void resetSimulation();
 
 private:
 void sendCmd(const LowlevelCmd *cmd);
@@ -34,6 +36,7 @@ rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr _imu_sub;
 rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr _foot_states_sub[4], _base_w_sub, _base_t_sub;
 rclcpp::Subscription<rosgraph_msgs::msg::Clock>::SharedPtr _time_sub;
 rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_sub;
+rclcpp::Client<std_srvs::srv::Empty>::SharedPtr _reset_client;
 rclcpp::Publisher<unitree_legged_msgs::msg::MotorCmd>::SharedPtr _servo_pub[12];
 unitree_legged_msgs::msg::LowCmd _lowCmd;
 unitree_legged_msgs::msg::LowState _lowState;

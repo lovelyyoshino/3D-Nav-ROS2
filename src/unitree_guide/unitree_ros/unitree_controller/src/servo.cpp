@@ -30,7 +30,7 @@ public:
     multiThread(rclcpp::Node::SharedPtr node, string rname){
         robot_name = rname;
         imu_sub = node->create_subscription<sensor_msgs::msg::Imu>(
-            "/trunk_imu", 1, std::bind(&multiThread::imuCallback, this, std::placeholders::_1));
+            "/" + robot_name + "_gazebo/trunk_imu", 1, std::bind(&multiThread::imuCallback, this, std::placeholders::_1));
         footForce_sub[0] = node->create_subscription<geometry_msgs::msg::WrenchStamped>(
             "/visual/FR_foot_contact/the_force", 1, std::bind(&multiThread::FRfootCallback, this, std::placeholders::_1));
         footForce_sub[1] = node->create_subscription<geometry_msgs::msg::WrenchStamped>(

@@ -55,7 +55,7 @@
                     <namespace>/a1_gazebo</namespace>
                     <remapping>~/out:=trunk_imu</remapping>
                 </ros>
-                <initial_orientation_as_reference>false</initial_orientation_as_reference>
+                <initial_orientation_as_reference>true</initial_orientation_as_reference>
                 <frame_name>imu_link</frame_name>
             </plugin>
             <pose>0 0 0 0 0 0</pose>
@@ -71,7 +71,7 @@
             </ros>
             <update_rate>100</update_rate>
             <body_name>base</body_name>
-            <frame_name>base</frame_name>
+            <frame_name>world</frame_name>
             <xyz_offset>0 0 0</xyz_offset>
             <rpy_offset>0 0 0</rpy_offset>
         </plugin>
@@ -412,7 +412,7 @@
                 <namespace>/a1_gazebo</namespace>
                 <remapping>~/out:=/livox/imu</remapping>
             </ros>
-            <initial_orientation_as_reference>false</initial_orientation_as_reference>
+            <initial_orientation_as_reference>true</initial_orientation_as_reference>
             <frame_name>livox_imu_link</frame_name>
         </plugin>
         <pose>0 0 0 0 0 0</pose>

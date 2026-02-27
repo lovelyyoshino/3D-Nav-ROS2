@@ -136,6 +136,9 @@ cloud_topic:=x_fast_liwo/world_cloud \
 frame_id:=map
 ```
 
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/f772ef21117a43f0bd98439824811e27.png)
+
+
 ### 3. 启动 PCT-planner
 进入 `PCT-planner` 文件夹并运行以下命令：
 ```bash

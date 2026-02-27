@@ -67,6 +67,7 @@ private:
     FSMMode _mode;
     long long _startTime;
     int count;
+    bool _resetLatch = false;
 };
 
 

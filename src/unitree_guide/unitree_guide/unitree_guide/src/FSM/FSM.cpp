@@ -3,6 +3,7 @@
 ***********************************************************************/
 #include "FSM/FSM.h"
 #include <iostream>
+#include <unistd.h>
 
 FSM::FSM(CtrlComponents *ctrlComp)
     :_ctrlComp(ctrlComp){
@@ -31,6 +32,7 @@ void FSM::initialize(){
     _currentState -> enter();
     _nextState = _currentState;
     _mode = FSMMode::NORMAL;
+    _resetLatch = false;
 }
 
 void FSM::run(){
@@ -49,6 +51,23 @@ void FSM::run(){
             _ctrlComp->ioInter->setPassive();
             std::cerr << "[FSM SAFETY] Robot tilt > 60 deg, switching to PASSIVE" << std::endl;
         }
+    }
+
+    if(_ctrlComp->lowState->userCmd == UserCommand::RESET_SIM){
+        if(!_resetLatch){
+            _resetLatch = true;
+            std::cout << "[FSM] Reset simulation requested" << std::endl;
+            _currentState->exit();
+            _ctrlComp->ioInter->resetSimulation();
+            usleep(500000);  // wait 500ms for Gazebo to reset
+            _currentState = _stateList.passive;
+            _currentState->enter();
+            _mode = FSMMode::NORMAL;
+            std::cout << "[FSM] Reset done, back to PASSIVE" << std::endl;
+        }
+        return;
+    } else {
+        _resetLatch = false;
     }
 
     if(_mode == FSMMode::NORMAL){
@@ -117,7 +136,14 @@ FSMState* FSM::getNextState(FSMStateName stateName){
 
 bool FSM::checkSafty(){
     // The angle with z axis less than 60 degree
-    if(_ctrlComp->lowState->getRotMat()(2,2) < 0.5 ){
+    double r22 = _ctrlComp->lowState->getRotMat()(2,2);
+    if(r22 < 0.5 ){
+        std::cerr << "[FSM DIAG] RotMat(2,2)=" << r22
+                  << "  quat=[" << _ctrlComp->lowState->imu.quaternion[0]
+                  << ", " << _ctrlComp->lowState->imu.quaternion[1]
+                  << ", " << _ctrlComp->lowState->imu.quaternion[2]
+                  << ", " << _ctrlComp->lowState->imu.quaternion[3]
+                  << "]" << std::endl;
         return false;
     }else{
         return true;

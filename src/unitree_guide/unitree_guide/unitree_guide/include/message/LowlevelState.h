@@ -38,6 +38,7 @@ struct IMU
             gyroscope[i] = 0;
             accelerometer[i] = 0;
         }
+        quaternion[0] = 1.0f;  // w=1 for valid identity quaternion
         quaternion[3] = 0;
     }
 

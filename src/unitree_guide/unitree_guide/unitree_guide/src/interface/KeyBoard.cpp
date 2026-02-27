@@ -38,6 +38,8 @@ UserCommand KeyBoard::checkCmd(){
 #endif  // COMPILE_WITH_MOVE_BASE
     case '6':
         return UserCommand::RL;
+    case 'r':case 'R':
+        return UserCommand::RESET_SIM;
     case '0':
         return UserCommand::L1_X;
     case '9':

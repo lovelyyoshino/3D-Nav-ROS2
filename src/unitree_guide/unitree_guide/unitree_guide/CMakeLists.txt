@@ -89,6 +89,7 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(unitree_legged_msgs REQUIRED)
 find_package(rosgraph_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
 # LCM 依赖 — 可选，仅在需要时链接
@@ -186,6 +187,7 @@ if(AMENT_MAKE)
         tf2_ros
         unitree_legged_msgs
         rosgraph_msgs
+        std_srvs
     )
     if(SIMULATION)
         ament_target_dependencies(junior_ctrl

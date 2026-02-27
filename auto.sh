@@ -16,13 +16,13 @@ sleep 0.5
 rm -f /dev/shm/fastrtps_* 2>/dev/null || true
 echo "Cleanup done."
 
-# Step 2: 构建工作空间
-echo "=== Step 2: 构建 ==="
-source ./install/setup.bash
-colcon build --packages-select a1_description unitree_legged_control unitree_controller unitree_guide
-# 重新 source（确保使用刚编译的版本）
-source ./install/setup.bash
-echo "Build done."
+# # Step 2: 构建工作空间
+# echo "=== Step 2: 构建 ==="
+# source ./install/setup.bash
+# colcon build --packages-select a1_description unitree_legged_control unitree_controller unitree_guide
+# # 重新 source（确保使用刚编译的版本）
+# source ./install/setup.bash
+# echo "Build done."
 
 # Step 3: 启动仿真
 echo "=== Step 3: 启动仿真 (world=$WORLD_NAME, gui=$GUI) ==="
@@ -39,14 +39,14 @@ sleep 50
 
 # Step 4: 启动 X-FAST_LIWO 建图节点
 echo "=== Step 4: 启动 X-FAST_LIWO 建图 ==="
-# ros2 launch x_fast_liwo mapping_mid360_launch.py &
-# LIWO_PID=$!
-# if [ $? -eq 0 ]; then
-#     echo "Successfully launched X-FAST_LIWO mapping (PID: $LIWO_PID)."
-# else
-#     echo "Failed to launch X-FAST_LIWO mapping. Exiting."
-#     exit 1
-# fi
+ros2 launch x_fast_liwo mapping_mid360_launch.py &
+LIWO_PID=$!
+if [ $? -eq 0 ]; then
+    echo "Successfully launched X-FAST_LIWO mapping (PID: $LIWO_PID)."
+else
+    echo "Failed to launch X-FAST_LIWO mapping. Exiting."
+    exit 1
+fi
 
 # Step 5: 启动 junior_ctrl 控制器（前台运行，接收键盘输入）
 echo "=== Step 5: 启动 junior_ctrl（前台，按 2 站立，按 4 行走）==="
