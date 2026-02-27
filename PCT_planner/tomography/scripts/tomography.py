@@ -27,6 +27,7 @@ class Tomography(Node):
         super().__init__('pointcloud_tomography')
         self.export_dir = rsg_root + cfg.map.export_dir
         self.pcd_file = scene_cfg.pcd.file_name
+        self.pcd_dir = scene_cfg.pcd.pcd_dir
         self.resolution = scene_cfg.map.resolution
         self.ground_h = scene_cfg.map.ground_h
         self.slice_dh = scene_cfg.map.slice_dh
@@ -61,7 +62,11 @@ class Tomography(Node):
         self.tomogram_pub = self.create_publisher(PointCloud2, tomogram_topic, latching_qos)
 
     def loadPCD(self, pcd_file):
-        pcd = o3d.io.read_point_cloud(rsg_root + "/rsc/pcd/" + pcd_file)
+        if self.pcd_dir:
+            pcd_path = os.path.join(self.pcd_dir, pcd_file)
+        else:
+            pcd_path = rsg_root + "/rsc/pcd/" + pcd_file
+        pcd = o3d.io.read_point_cloud(pcd_path)
         points = np.asarray(pcd.points).astype(np.float32)
         self.get_logger().info("PCD points: %d" % points.shape[0])
 

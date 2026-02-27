@@ -1,5 +1,6 @@
 class ScenePCD():
     file_name = None
+    pcd_dir = None
 
 
 class SceneMap():

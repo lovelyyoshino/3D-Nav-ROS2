@@ -3,7 +3,8 @@ from .scene import ScenePCD, SceneMap, SceneTrav
 
 class SceneBuilding():
     pcd = ScenePCD()
-    pcd.file_name = 'building2_9.pcd'
+    pcd.pcd_dir = '/media/bigdisk/dog_ws_ros/map'
+    pcd.file_name = 'global_map.pcd'
 
     # 初始化场景地图对象
     map = SceneMap()
