@@ -37,7 +37,7 @@ std::array<double, 3> _RR_foot_pos = {0.0, 0.0, 0.0};
 std::array<double, 3> _RR_foot_vel = {0.0, 0.0, 0.0};
 std::vector<float> axes = std::vector<float>(8, 0.0f);
 std::vector<int> buttons = std::vector<int>(12, 0);
-uint32_t current_time = 0;
+long long current_time = 0;  // microseconds, from /clock (sim time)
 protected:
 CmdPanel *cmdPanel;
 };

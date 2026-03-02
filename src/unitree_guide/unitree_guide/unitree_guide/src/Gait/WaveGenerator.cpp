@@ -6,8 +6,8 @@
 #include <sys/time.h>
 #include <math.h>
 
-WaveGenerator::WaveGenerator(double period, double stancePhaseRatio, Vec4 bias)
-    : _period(period), _stRatio(stancePhaseRatio), _bias(bias)
+WaveGenerator::WaveGenerator(double period, double stancePhaseRatio, Vec4 bias, long long *simTimePtr)
+    : _period(period), _stRatio(stancePhaseRatio), _bias(bias), _simTimePtr(simTimePtr)
 {
 
     if ((_stRatio >= 1) || (_stRatio <= 0))
@@ -25,7 +25,7 @@ WaveGenerator::WaveGenerator(double period, double stancePhaseRatio, Vec4 bias)
         }
     }
 
-    _startT = getSystemTime();
+    _startT = _simTimePtr ? *_simTimePtr : getSystemTime();
     _contactPast.setZero();
     _phasePast << 0.5, 0.5, 0.5, 0.5;
     _statusPast = WaveStatus::SWING_ALL;
@@ -101,7 +101,8 @@ void WaveGenerator::calcWave(Vec4 &phase, VecInt4 &contact, WaveStatus status)
 {
     if (status == WaveStatus::WAVE_ALL)
     {
-        _passT = (double)(getSystemTime() - _startT) * 1e-6;
+        long long now = _simTimePtr ? *_simTimePtr : getSystemTime();
+        _passT = (double)(now - _startT) * 1e-6;
         for (int i(0); i < 4; ++i)
         {
             _normalT(i) = fmod(_passT + _period - _period * _bias(i), _period) / _period;

@@ -145,13 +145,12 @@ namespace unitree_legged_control
     // Controller startup in realtime
     controller_interface::CallbackReturn UnitreeJointController::on_activate(const rclcpp_lifecycle::State & /*previous_state*/)
     {
-        // Zero gains so robot is limp on spawn (like original ROS1 starting()).
+        // Match ROS1 starting(): mode=BRAKE provides velStiffness=20 damping,
+        // preventing the robot from collapsing before junior_ctrl takes over.
         // Actual joint position is read on the first update() call via firstRun flag,
         // because state_interfaces may not have valid data yet here.
-        lastCmd.mode = PMSM;
+        lastCmd.mode = BRAKE;
         lastCmd.q = 0;
-        lastCmd.kp = 0;
-        lastCmd.kd = 0;
         lastCmd.dq = 0;
         lastCmd.tau = 0;
         lastState.q = 0;

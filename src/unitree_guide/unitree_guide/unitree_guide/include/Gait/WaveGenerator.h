@@ -16,7 +16,7 @@
 /*generate linear wave, [0, 1]*/
 class WaveGenerator{
 public:
-    WaveGenerator(double period, double stancePhaseRatio, Vec4 bias);
+    WaveGenerator(double period, double stancePhaseRatio, Vec4 bias, long long *simTimePtr = nullptr);
     ~WaveGenerator();
     void calcContactPhase(Vec4 &phaseResult, VecInt4 &contactResult, WaveStatus status);
     float getTstance();
@@ -37,6 +37,7 @@ private:
 
     double _passT;                   // unit: second
     long long _startT;    // unit: us
+    long long *_simTimePtr;  // pointer to IOInterface::current_time (sim time, us)
 #ifdef COMPILE_DEBUG
     PyPlot _testPlot;
 #endif  // COMPILE_DEBUG
